@@ -2,7 +2,6 @@
 require 'json'
 require 'pp'
 
-
 timescale=[]
 lastitem=[]
 node=Hash.new
@@ -13,6 +12,8 @@ pattern = JSON.parse(json)
 tic=0
 
 vfname=pattern["head"]["text"]
+testFileName=vfname+"Test.prc"
+testFile=File.open(testFileName, 'w')
 
 string=pattern["foot"]["text"]
 field=string.split
@@ -185,20 +186,20 @@ pp event
 
 
 previousTime=0
-puts "enter VF048_TimeCounter=0"
+testFile.puts "enter VF048_TimeCounter=0"
 event.each_pair do | time, array |
-  puts "while VF048_TimeCounter > 0"
-  puts "endw"
+  testFile.puts "while VF048_TimeCounter > 0"
+  testFile.puts "endw"
   array.each do | action |
     if action[2] != -1
   if action[0].casecmp("Input") == 0
-    puts "enter "+vfname+"_ModelInputs."+action[1]+"="+action[2].to_s
+    testFile.puts "enter "+vfname+"_ModelInputs."+action[1]+"="+action[2].to_s
   else
   end
 end
   end
   t=(((time-previousTime)*timescale[0]/1000)/TIMER75MSEC).to_i
   previousTime=time
-  puts "enter VF048_TimeCounter="+t.to_s
-  
+testFile.puts "enter VF048_TimeCounter="+t.to_s
 end
+testFile.close

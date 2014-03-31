@@ -1,0 +1,22 @@
+{"signal":
+ [
+   ["Input",
+  		{"name": "clk",    "wave": "p.....|...|.",
+                           "node": "............"},
+  		{"name": "dat",    "wave": "x.345x|=.x|x",
+                           "node": "....b.......", "data": ["4", "2", "1", "4"]},
+  		{"name": "req",    "wave": "0.1..0|1.0|1",
+                           "node": "....cf......"}
+   ],
+  {},
+  ["Output",
+     	{"name": "ack",    "wave": "1.....|010|1",
+                           "node": ".......a...d"},
+        {"name": "KeySts", "wave": "1.....|01.|0",
+                           "node": "....e......."}
+  ]
+ ],
+   "edge":["f~->a 10sec","a~->d 10sec"],
+   "head": {"text":"VF043","tick":"0"},
+   "foot": {"text":"tick: 1 sec"}
+}

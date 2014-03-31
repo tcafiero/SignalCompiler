@@ -2,6 +2,7 @@
 require 'json'
 require 'pp'
 
+
 timescale=[]
 lastitem=[]
 node=Hash.new

@@ -6,9 +6,11 @@ require 'pp'
 timescale=[]
 lastitem=[]
 node=Hash.new
+TIMER75MSEC=75.0/1000.0
 
 json = File.read('prova1.json')
 pattern = JSON.parse(json)
+tic=0
 
 vfname=pattern["head"]["text"]
 
@@ -146,40 +148,50 @@ signal.each do | block |
 end
 
 #pp pattern
-
+wave={}
+testPattern = Hash.new
 signal.each do | block |
   if block.kind_of?(Array)
     block.each  do| track|
       if track.kind_of?(String)
-        type=track
+        testPattern[track] = Hash.new
+        wave=testPattern[track]
       else
-        value=track["vector"]
-        track["vector"]=value.flatten
+        wave[track["name"]]=value=track["vector"].flatten
       end
     end
   end
 end
+pp testPattern
 
-
-signal.each do | block |
-  if block.kind_of?(Array)
-    block.each  do| track|
-      if track.kind_of?(String)
-        type=track
-      else
-        track["event"]=Hash.new
-        tic=0
-        lastValue=track["vector"][0]
-        track["event"][tic]=track["vector"][0]
-        track["vector"].each do | value |
-          if value != lastValue
-            track["event"][tic]=value
-            lastValue=value
-          end
-          tic += 1
+event=Hash.new
+testPattern.each_pair do | blockname, block |
+  block.each_pair  do| trackname, track|
+    lastValue=-1
+    tic=0
+    track.each do | value |
+      if value != lastValue
+        if event[tic].nil?
+          event[tic]=Array.new
         end
+        event[tic] << [blockname, trackname, value]
+        lastValue=value
       end
+      tic += 1
     end
   end
 end
-pp pattern
+pp event
+
+
+previousTime=0
+event.each_pair do | time, array |
+  puts "========="
+  puts time
+  pp array
+  t=(((time-previousTime)*timescale[0]/1000)/TIMER75MSEC).to_i
+  puts "load timer "+t.to_s
+  previousTime=time
+  puts "========="
+  
+end

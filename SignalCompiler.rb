@@ -185,13 +185,20 @@ pp event
 
 
 previousTime=0
+puts "enter VF048_TimeCounter=0"
 event.each_pair do | time, array |
-  puts "========="
-  puts time
-  pp array
+  puts "while VF048_TimeCounter > 0"
+  puts "endw"
+  array.each do | action |
+    if action[2] != -1
+  if action[0].casecmp("Input") == 0
+    puts "enter "+vfname+"_ModelInputs."+action[1]+"="+action[2].to_s
+  else
+  end
+end
+  end
   t=(((time-previousTime)*timescale[0]/1000)/TIMER75MSEC).to_i
-  puts "load timer "+t.to_s
   previousTime=time
-  puts "========="
+  puts "enter VF048_TimeCounter="+t.to_s
   
 end

@@ -7,12 +7,12 @@ lastitem=[]
 node=Hash.new
 TIMER75MSEC=75.0/1000.0
 
-json = File.read('prova1.json')
+json = File.read(ARGV[0]+'.json')
 pattern = JSON.parse(json)
 tic=0
 
 vfname=pattern["head"]["text"]
-testFileName=vfname+"Test.prc"
+testFileName=ARGV[0]+".prc"
 testFile=File.open(testFileName, 'w')
 
 string=pattern["foot"]["text"]
@@ -163,7 +163,7 @@ signal.each do | block |
     end
   end
 end
-pp testPattern
+##pp testPattern
 
 event=Hash.new
 testPattern.each_pair do | blockname, block |
@@ -182,24 +182,46 @@ testPattern.each_pair do | blockname, block |
     end
   end
 end
-pp event
+##pp event.keys.sort
 
 
-previousTime=0
-testFile.puts "enter VF048_TimeCounter=0"
-event.each_pair do | time, array |
-  testFile.puts "while VF048_TimeCounter > 0"
+scale=timescale[0]/2/1000.0/TIMER75MSEC
+previousTime=0.0
+testFile.puts "SET RADIC /DECIMAL"
+testFile.puts "enter VF048_StopWatch=0"
+
+event.keys.sort.each do | time|
+  array=event[time]
+  testFile.puts "while VF048_StopWatch > 0"
   testFile.puts "endw"
   array.each do | action |
     if action[2] != -1
-  if action[0].casecmp("Input") == 0
-    testFile.puts "enter "+vfname+"_ModelInputs."+action[1]+"="+action[2].to_s
-  else
+      if action[0].casecmp("Input") == 0
+        testFile.puts "enter "+vfname+"_ModelInputs."+action[1]+"="+action[2].to_s
+      end
+    end
   end
-end
-  end
-  t=(((time-previousTime)*timescale[0]/1000)/TIMER75MSEC).to_i
+  condition=""
+  operator=""
+  array.each do | action |
+    if action[2] != -1
+      if action[0].casecmp("Output") == 0
+        condition += operator+" ("+vfname+"_ModelOutputs."+action[1]+" == "+action[2].to_s+") "
+        operator="&&"
+      end
+    end
+   end
+   if condition != ""
+     testFile.puts "if ("+condition+")"
+     testFile.puts "printf \"OK\\n\""
+     testFile.puts "else"
+     testFile.puts "printf \"ERROR\\n\""
+     testFile.puts "endif"
+   end
+  testFile.puts "enter VF048_StopWatch="+(((time-previousTime)*scale).to_i).to_s
   previousTime=time
-testFile.puts "enter VF048_TimeCounter="+t.to_s
-end
-testFile.close
+
+#  t=(((time-previousTime)*timescale[0]/1000.0)/TIMER75MSEC).to_i
+#  testFile.puts "enter VF048_StopWatch="+t.to_s
+ end
+ testFile.close

@@ -1,0 +1,24 @@
+{"signal":
+ [
+   ["Input",
+  		{"name": "KeySts",                 "wave": "3.....|.....",
+                                           "node": "............", "data": ["1"]},
+  		{"name": "ComfortEnable",          "wave": "1.....|.....",
+                                           "node": "............"},
+  		{"name": "FollowMeCmd",            "wave": "pp0...|1....",
+                                           "node": ".a.....b...."}
+   ],
+  {},
+  ["Output",
+     	{"name": "PosLightFollowMeCmd",    "wave": "0.1...|.0...",
+                                           "node": "............"},
+        {"name": "LowBeamFollowMeCmd",     "wave": "0.1...|.0...",
+                                           "node": "............"},
+        {"name": "Luci_targa_cmd",         "wave": "0.1...|.0...",
+                                           "node": "............"}
+  ]
+ ],
+   "edge":["a~->b 20sec"],
+   "head": {"text":"VF048","tick":"0"},
+   "foot": {"text":"tick: 1 sec"}
+}

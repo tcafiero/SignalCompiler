@@ -12,7 +12,7 @@ pattern = JSON.parse(json)
 tic=0
 
 vfname=pattern["head"]["text"]
-testFileName=ARGV[0]+".prc"
+testFileName=ARGV[0]+"Test.prc"
 testFile=File.open(testFileName, 'w')
 
 string=pattern["foot"]["text"]
@@ -85,8 +85,6 @@ signal.each do | block |
     end
   end
 end
-
-
 #pp pattern
 #pp node
 
@@ -184,7 +182,6 @@ testPattern.each_pair do | blockname, block |
 end
 ##pp event.keys.sort
 
-
 scale=timescale[0]/2/1000.0/TIMER75MSEC
 previousTime=0.0
 testFile.puts "SET RADIC /DECIMAL"
@@ -210,18 +207,18 @@ event.keys.sort.each do | time|
         operator="&&"
       end
     end
-   end
-   if condition != ""
-     testFile.puts "if ("+condition+")"
-     testFile.puts "printf \"OK\\n\""
-     testFile.puts "else"
-     testFile.puts "printf \"ERROR\\n\""
-     testFile.puts "endif"
-   end
+  end
+  if condition != ""
+    testFile.puts "if ("+condition+")"
+    testFile.puts "printf \"OK\\n\""
+    testFile.puts "else"
+    testFile.puts "printf \"ERROR\\n\""
+    testFile.puts "endif"
+  end
   testFile.puts "enter VF048_StopWatch="+(((time-previousTime)*scale).to_i).to_s
   previousTime=time
 
-#  t=(((time-previousTime)*timescale[0]/1000.0)/TIMER75MSEC).to_i
-#  testFile.puts "enter VF048_StopWatch="+t.to_s
- end
- testFile.close
+  #  t=(((time-previousTime)*timescale[0]/1000.0)/TIMER75MSEC).to_i
+  #  testFile.puts "enter VF048_StopWatch="+t.to_s
+end
+testFile.close

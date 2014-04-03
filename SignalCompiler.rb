@@ -184,19 +184,24 @@ end
 
 scale=timescale[0]/2/1000.0/TIMER75MSEC
 previousTime=0.0
-testFile.puts "SET RADIC /DECIMAL"
+testFile.puts "SET RADIX /DECIMAL"
 testFile.puts "enter VF048_StopWatch=0"
 
 event.keys.sort.each do | time|
   array=event[time]
   testFile.puts "while VF048_StopWatch > 0"
   testFile.puts "endw"
+  n_events=0
   array.each do | action |
     if action[2] != -1
       if action[0].casecmp("Input") == 0
         testFile.puts "enter "+vfname+"_ModelInputs."+action[1]+"="+action[2].to_s
+        n_events += 1
       end
     end
+  end
+  if n_events > 0
+    testFile.puts "enter "+vfname+"_ModelEventCounter="+n_events.to_s
   end
   condition=""
   operator=""
